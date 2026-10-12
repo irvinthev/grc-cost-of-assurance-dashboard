@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GRC Scenario Runner</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --ink: #10213f;
+      --muted: #64748b;
+      --line: #dce5ef;
+      --navy: #123b68;
+      --teal: #0f9f94;
+      --green: #087044;
+      --red: #b32635;
+      --amber: #8a6100;
+      --soft: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--ink); }
+    main { max-width: 1360px; margin: 0 auto; padding: 28px; }
+    header { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 18px; }
+    h1 { margin: 0; font-size: 34px; letter-spacing: -0.02em; }
+    h2 { margin: 0 0 12px; font-size: 18px; }
+    .sub { color: var(--muted); margin-top: 6px; }
+    .note { border: 1px solid #cfe0f5; background: #eaf4ff; color: #17426d; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.4; max-width: 390px; }
+    .grid { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
+    .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 10px 24px rgba(16, 33, 63, 0.06); padding: 16px; }
+    .scenario { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--soft); margin-bottom: 10px; cursor: pointer; }
+    .scenario.active { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,159,148,.12); background: #f0fffc; }
+    .scenario-title { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-weight: 800; margin-bottom: 5px; }
+    .scenario p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    button { width: 100%; border: 0; border-radius: 10px; background: var(--navy); color: white; font-weight: 800; padding: 12px 14px; cursor: pointer; margin-top: 8px; }
+    button:hover { background: #0d2f52; }
+    .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+    .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .kpi-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 800; margin-bottom: 8px; }
+    .kpi-value { font-size: 26px; font-weight: 900; }
+    .content { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+    .stack { display: grid; gap: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; vertical-align: top; border-bottom: 1px solid #edf1f6; padding: 9px 8px; }
+    th { color: var(--muted); background: var(--soft); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+    .pill { display: inline-block; border-radius: 999px; padding: 4px 8px; font-size: 11px; font-weight: 900; white-space: nowrap; }
+    .pass { background: #dff7ec; color: var(--green); }
+    .fail { background: #ffe1e5; color: var(--red); }
+    .warn { background: #fff0c6; color: var(--amber); }
+    .info { background: #e3efff; color: #1b5da8; }
+    .log { display: grid; gap: 8px; }
+    .event { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; padding: 10px; border: 1px solid #edf1f6; border-radius: 10px; background: var(--soft); }
+    .dot { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #dff3f0; color: var(--teal); font-size: 12px; font-weight: 900; }
+    .event b { display: block; margin-bottom: 3px; }
+    .event span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .payload { background: #0f172a; color: #dbeafe; border-radius: 10px; padding: 14px; font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 1.45; white-space: pre-wrap; overflow: auto; min-height: 180px; }
+    .callout { border-radius: 10px; padding: 12px; line-height: 1.45; font-size: 13px; background: #fff8e8; border: 1px solid #f0d89c; color: #5b4312; }
+    @media (max-width: 1000px) { .grid, .content, .kpis { grid-template-columns: 1fr; } header { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>GRC Scenario Runner</h1>
+        <div class="sub">Run a vendor / AI tool review through intake, evidence validation, control mapping, risk routing, and dashboard impact.</div>
+      </div>
+      <div class="note">This is a demo harness. The point is to show behavior: what passes, what fails, what becomes high risk, and how the result changes the dashboard.</div>
+    </header>
+    <section class="grid">
+      <aside class="panel">
+        <h2>Choose Scenario</h2>
+        <div class="scenario active" data-scenario="positive"><div class="scenario-title">Positive Run <span class="pill pass">Pass</span></div><p>Low-risk vendor, limited internal metadata, clean evidence, least-privilege integration.</p></div>
+        <div class="scenario" data-scenario="validation"><div class="scenario-title">Data Validation Error <span class="pill warn">Exception</span></div><p>Questionnaire answer conflicts with evidence. The workflow opens an exception and asks for remediation.</p></div>
+        <div class="scenario" data-scenario="highRisk"><div class="scenario-title">High-Risk Submission <span class="pill fail">High Risk</span></div><p>AI-enabled vendor touches customer data, broad permissions, and unresolved evidence gaps.</p></div>
+        <button id="runBtn">Run Scenario</button>
+        <div class="callout" style="margin-top:12px">Talk track: “I’m not claiming the prototype saves money. I’m showing how events become metrics, metrics become risk decisions, and risk decisions become cost and remediation visibility.”</div>
+      </aside>
+      <section>
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-label">Review Result</div><div class="kpi-value" id="reviewResult">Pass</div></div>
+          <div class="kpi"><div class="kpi-label">Risk Tier</div><div class="kpi-value" id="riskTier">Low</div></div>
+          <div class="kpi"><div class="kpi-label">Evidence Health</div><div class="kpi-value" id="evidenceHealth">96%</div></div>
+          <div class="kpi"><div class="kpi-label">Manual Cost</div><div class="kpi-value" id="manualCost">$213</div></div>
+          <div class="kpi"><div class="kpi-label">Cycle Time</div><div class="kpi-value" id="cycleTime">1.2d</div></div>
+        </div>
+        <div class="content">
+          <div class="stack">
+            <div class="panel"><h2>Run Output</h2><div class="log" id="eventLog"></div></div>
+            <div class="panel"><h2>Control Framework Mapping</h2><table><thead><tr><th>Control Area</th><th>Example Requirement</th><th>Evidence</th><th>Status</th></tr></thead><tbody id="controlRows"></tbody></table></div>
+          </div>
+          <div class="stack">
+            <div class="panel"><h2>Risk Register / Remediation Payload</h2><div class="payload" id="payload"></div></div>
+            <div class="panel"><h2>Dashboard Impact</h2><table><thead><tr><th>Metric</th><th>Before</th><th>After Run</th><th>Interpretation</th></tr></thead><tbody id="impactRows"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <script>
+    const scenarios = {
+      positive: {
+        result: "Pass", riskTier: "Low", evidenceHealth: "96%", manualCost: "$213", cycleTime: "1.2d",
+        events: [["1", "Intake submitted", "Vendor: Acme Analytics. Data: internal metadata only. AI use: none."], ["2", "Risk classified", "Low risk due to non-sensitive data, limited access, and no model training exposure."], ["3", "Evidence validated", "SOC report, DPA, access description, and security policy are current and consistent."], ["4", "Review approved", "No exception opened. Evidence package is audit-ready and reusable."]],
+        controls: [["Vendor Risk Management", "Vendor has current security report and DPA.", "SOC 2 report + DPA", "pass"], ["Access Governance", "Integration follows least-privilege access.", "OAuth scope export", "pass"], ["Evidence Reliability", "Evidence is current and traceable to source.", "Dated source documents", "pass"], ["AI Governance", "No AI processing or model training on company data.", "Vendor questionnaire + DPA", "pass"]],
+        payload: { review_id: "VR-101", vendor: "Acme Analytics", risk_tier: "low", decision: "approved", risk_register_entry: null, remediation_ticket: null, evidence_package: "ready_for_reuse" },
+        impact: [["Open exceptions", "6", "6", "No new exception created."], ["Evidence reuse", "68%", "70%", "Clean package can support future reviews."], ["Manual touches", "7", "3", "Automation handled intake, mapping, and validation."], ["Residual risk", "12%", "11%", "Low-risk review closed cleanly."]]
+      },
+      validation: {
+        result: "Exception", riskTier: "Medium", evidenceHealth: "61%", manualCost: "$624", cycleTime: "4.8d",
+        events: [["1", "Intake submitted", "Vendor: Nimbus AI Notes. Data: employee meeting notes and internal documents."], ["2", "Risk classified", "Medium risk due to internal data, SaaS integration, and AI summarization feature."], ["3", "Evidence failed", "Questionnaire says no data retention, but DPA allows 30-day processing logs."], ["4", "Exception opened", "Control owner must validate retention, deletion rights, and admin configuration."], ["5", "ServiceNow payload generated", "Remediation assigned with owner, due date, and evidence request."]],
+        controls: [["Vendor Risk Management", "Vendor answers must be supported by contract/evidence.", "Questionnaire conflicts with DPA", "fail"], ["Data Governance", "Retention and processing purpose must be documented.", "DPA retention clause", "warn"], ["Access Governance", "Integration scopes must match approved use.", "Admin scope export missing", "fail"], ["AI Governance", "AI data handling must align to approved usage.", "AI terms incomplete", "warn"]],
+        payload: { review_id: "VR-202", vendor: "Nimbus AI Notes", risk_tier: "medium", decision: "exception_opened", risk_register_entry: { issue: "Vendor questionnaire conflicts with DPA retention language", owner: "GRC / Legal", due_date: "2026-10-19" }, remediation_ticket: { system: "ServiceNow mock", priority: "P3", action: "Validate retention, access scopes, and AI data handling" } },
+        impact: [["Open exceptions", "6", "7", "New exception created from failed validation."], ["Evidence reliability", "87%", "82%", "Conflicting evidence lowers reliability."], ["Manual cost", "$213", "$624", "Rework and follow-up increase handling cost."], ["Cycle time", "1.2d", "4.8d", "Review waits on Legal/GRC clarification."]]
+      },
+      highRisk: {
+        result: "Escalate", riskTier: "High", evidenceHealth: "38%", manualCost: "$1,148", cycleTime: "8.6d",
+        events: [["1", "Intake submitted", "Vendor: Atlas Agent Platform. Data: customer content, support tickets, and API access."], ["2", "Risk classified", "High risk due to customer data, agentic actions, plugins, and broad integration permissions."], ["3", "Control mapping expanded", "Mapped to vendor risk, AI governance, access governance, data protection, and incident response."], ["4", "Evidence failed", "Missing subprocessors, unclear model training terms, no plugin governance evidence."], ["5", "Risk escalated", "High-risk entry created. Remediation routed to Security, Legal, and Engineering owner."]],
+        controls: [["Vendor Risk Management", "High-risk vendors require enhanced review.", "Security package incomplete", "fail"], ["Data Governance", "Customer data usage, retention, and sharing must be documented.", "Subprocessor list missing", "fail"], ["Access Governance", "Agent/tool permissions must be least privilege and auditable.", "Broad API scopes", "fail"], ["AI Governance", "AI processing, plugins, model training, and agent actions must be governed.", "No plugin control evidence", "fail"], ["Incident Response", "Vendor security events and notification obligations must be defined.", "Contract clause incomplete", "warn"]],
+        payload: { review_id: "VR-303", vendor: "Atlas Agent Platform", risk_tier: "high", decision: "escalate_before_approval", risk_register_entry: { issue: "AI-enabled vendor with customer data, broad permissions, and missing governance evidence", owner: "Security / GRC / Legal", due_date: "2026-10-16", residual_risk: "high" }, remediation_ticket: { system: "ServiceNow mock", priority: "P1", action: "Block production use until evidence gaps are resolved" } },
+        impact: [["Open high-risk reviews", "2", "3", "New high-risk submission requires escalation."], ["Evidence reliability", "87%", "75%", "Missing evidence materially affects trust."], ["Manual cost", "$213", "$1,148", "Escalations, rework, and multiple owners increase cost."], ["Residual risk", "12%", "18%", "Unresolved AI/vendor risk remains visible."]]
+      }
+    };
+    let selected = "positive";
+    function pill(status) { const map = { pass: "pass", fail: "fail", warn: "warn" }; const label = status === "pass" ? "Pass" : status === "fail" ? "Fail" : "Review"; return `<span class="pill ${map[status] || "info"}">${label}</span>`; }
+    function runScenario() {
+      const scenario = scenarios[selected];
+      document.getElementById("reviewResult").textContent = scenario.result;
+      document.getElementById("riskTier").textContent = scenario.riskTier;
+      document.getElementById("evidenceHealth").textContent = scenario.evidenceHealth;
+      document.getElementById("manualCost").textContent = scenario.manualCost;
+      document.getElementById("cycleTime").textContent = scenario.cycleTime;
+      document.getElementById("eventLog").innerHTML = scenario.events.map(event => `<div class="event"><div class="dot">${event[0]}</div><div><b>${event[1]}</b><span>${event[2]}</span></div></div>`).join("");
+      document.getElementById("controlRows").innerHTML = scenario.controls.map(row => `<tr><td><strong>${row[0]}</strong></td><td>${row[1]}</td><td>${row[2]}</td><td>${pill(row[3])}</td></tr>`).join("");
+      document.getElementById("payload").textContent = JSON.stringify(scenario.payload, null, 2);
+      document.getElementById("impactRows").innerHTML = scenario.impact.map(row => `<tr><td><strong>${row[0]}</strong></td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`).join("");
+    }
+    document.querySelectorAll(".scenario").forEach(card => { card.addEventListener("click", () => { document.querySelectorAll(".scenario").forEach(c => c.classList.remove("active")); card.classList.add("active"); selected = card.dataset.scenario; }); });
+    document.getElementById("runBtn").addEventListener("click", runScenario);
+    runScenario();
+  </script>
+</body>
+</html>
