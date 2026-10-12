@@ -59,6 +59,37 @@ The demo then calculates a simple risk score and updates:
 
 This is intentionally simplified. The goal is to demonstrate the operating model, not to claim the scoring logic is production-ready.
 
+## How to Demo This
+
+1. Open the executive dashboard and explain the business question: how much manual assurance effort is being created by vendor and AI tool reviews?
+2. Open the scenario runner.
+3. Run the positive submission to show the happy path.
+4. Run the data validation error to show evidence quality controls.
+5. Run the high-risk submission to show escalation, risk register entry, and remediation routing.
+6. Use the dashboard impact section to explain cost, velocity, evidence reliability, and residual risk.
+
+The point of the demo is not that this prototype is production-ready. The point is that the workflow makes manual GRC activity measurable and easier to manage.
+
+## Example Validation Matrix
+
+| Scenario | Expected Result | Example Controls Mapped | Risk Outcome | Cost Impact | Status |
+| --- | --- | --- | --- | --- | --- |
+| Positive vendor review | Review passes with complete evidence | Vendor risk, access governance, evidence reliability | Low residual risk | Manual review effort reduced | Pass |
+| Data validation error | Submission is blocked or routed for correction | Evidence reliability, data quality, audit trail | Medium risk until corrected | Rework cost is visible | Pass |
+| High-risk AI vendor | Review escalates to risk register and remediation | AI governance, data handling, vendor risk, incident response | High residual risk until mitigated | Cost of review and remediation is visible | Pass |
+
+## Sample Evidence
+
+The `sample-evidence` folder includes example evidence notes for each scenario:
+
+- `positive-vendor.md`
+- `missing-evidence.md`
+- `high-risk-ai-vendor.md`
+
+These are not real vendor records. They are test fixtures that explain the assumptions behind each scenario and make the demo easier to walk through.
+
+## Cost Model
+
 The cost model is intentionally transparent:
 
 ```text
@@ -67,7 +98,7 @@ Evidence rework cost = failed evidence x rework minutes x loaded hourly rate
 Net avoided effort = manual cost avoided - runtime cost - maintenance effort
 ```
 
-## Interview Positioning
+## Portfolio Positioning
 
 This is not meant to prove a real dollar savings claim.
 
