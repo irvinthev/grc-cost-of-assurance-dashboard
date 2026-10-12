@@ -2,6 +2,11 @@
 
 This is a lightweight proof-of-concept dashboard for a GRC Engineering workflow.
 
+## Live Demos
+
+- Executive dashboard: https://irvinthev.github.io/grc-cost-of-assurance-dashboard/
+- Scenario runner: https://irvinthev.github.io/grc-cost-of-assurance-dashboard/scenario-demo.html
+
 It demonstrates how vendor and AI tool review activity can be translated into:
 
 - process metrics
@@ -24,6 +29,36 @@ The workflow follows a simple path:
 6. ServiceNow-style remediation routing
 7. Executive dashboard reporting
 
+## Scenario Runner
+
+The scenario runner lets you test three canned examples:
+
+- Positive run
+- Data validation error
+- High-risk submission
+
+It also includes a small intake form where you can submit a custom vendor/tool review using:
+
+- vendor/tool name
+- data type
+- AI usage
+- integration or permission level
+- evidence status
+
+The demo then calculates a simple risk score and updates:
+
+- review result
+- risk tier
+- evidence health
+- manual cost estimate
+- cycle time
+- event log
+- control framework mapping
+- risk register / remediation payload
+- dashboard impact
+
+This is intentionally simplified. The goal is to demonstrate the operating model, not to claim the scoring logic is production-ready.
+
 The cost model is intentionally transparent:
 
 ```text
@@ -43,3 +78,15 @@ workflow events -> process metrics -> cost model -> executive dashboard
 ```
 
 That makes the cost story more defensible because the dashboard starts with observable workflow activity before translating it into estimated business impact.
+
+## Suggested Demo Talk Track
+
+I would present this as a proof-of-concept for how GRC Engineering can reduce the cost of assurance.
+
+The key idea is not that the prototype proves real savings. The key idea is that the workflow makes GRC activity measurable:
+
+```text
+intake -> classification -> evidence validation -> control mapping -> exception/risk entry -> remediation routing -> dashboard impact
+```
+
+That creates a defensible way to explain cost, velocity, evidence reliability, and residual risk.
