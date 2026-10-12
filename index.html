@@ -37,6 +37,31 @@
       padding: 28px;
     }
 
+    .top-nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      border: 1px solid #cfe0f5;
+      background: #ffffff;
+      color: var(--navy);
+      text-decoration: none;
+      padding: 9px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .nav-link.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #ffffff;
+    }
+
     header {
       display: flex;
       align-items: flex-start;
@@ -379,6 +404,12 @@
 </head>
 <body>
   <main class="page">
+    <nav class="top-nav" aria-label="Demo pages">
+      <a class="nav-link active" href="./index.html">Executive Dashboard</a>
+      <a class="nav-link" href="./scenario-demo.html">Scenario Runner</a>
+      <a class="nav-link" href="https://github.com/irvinthev/grc-cost-of-assurance-dashboard">GitHub Repo</a>
+    </nav>
+
     <header>
       <div>
         <h1>Cost of Assurance Dashboard</h1>
@@ -583,7 +614,7 @@
         </section>
 
         <section class="callout">
-          <strong>Interview positioning:</strong> This is not a production GRC platform. It is a proof-of-concept showing how I would make the workflow measurable, validate evidence quality, and translate GRC friction into cost, velocity, and residual risk.
+          <strong>Portfolio positioning:</strong> This is not a production GRC platform. It is a proof-of-concept showing how the workflow can be made measurable, how evidence quality can be validated, and how GRC friction can be translated into cost, velocity, and residual risk.
         </section>
       </aside>
     </section>
